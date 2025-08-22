@@ -1,0 +1,158 @@
+1. CREATE TABLE sales_reps (
+    id INT,
+    name VARCHAR(50),
+    salary DECIMAL(10, 2),
+    commission_pct DECIMAL(4, 2)
+);
+
+INSERT INTO sales_reps(id, name, salary, commission_pct)
+SELECT employee_id, last_name, salary, commission_pct
+FROM emps
+WHERE job_id LIKE '%REP%';
+
+
+SELECT * FROM sales_reps;
+
+2. UPDATE emps 
+SET department_id = 10 WHERE employee_id = 100; 
+
+SELECT * FROM emps WHERE employee_id = 100;
+
+3. CREATE TABLE copy_emp AS
+SELECT * FROM emps;
+
+SELECT * FROM copy_emp;
+
+UPDATE copy_emp
+SET department_id = (
+    SELECT department_id 
+    FROM emps 
+    WHERE employee_id = 101
+)
+WHERE job_id = (
+    SELECT job_id 
+    FROM emps 
+    WHERE employee_id = 200
+);
+
+SELECT * FROM copy_emp WHERE Job_Id = 'ADD_ASST';
+
+
+4. ALTER TABLE copy_emp ADD PRIMARY KEY (employee_id);
+
+    SELECT * FROM copy_emp
+   
+    SELECT * FROM emps
+
+
+UPDATE emps
+SET first_name = 'ChangedName'
+WHERE employee_id = 101;
+
+
+INSERT INTO emps (
+    employee_id, first_name, last_name, email, phone_number,
+    hire_date, job_id, salary, commission_pct, manager_id, department_id
+)
+VALUES (
+    999, 'NewEmp', 'Test', 'newemp@example.com', '0123456789',
+    CURDATE(), 'IT_PROG', 4000, NULL, 100, 60
+);
+
+
+INSERT INTO copy_emp (
+    employee_id, first_name, last_name, email, phone_number,
+    hire_date, job_id, salary, commission_pct, manager_id, department_id
+)
+SELECT
+    employee_id, first_name, last_name, email, phone_number,
+    hire_date, job_id, salary, commission_pct, manager_id, department_id
+FROM emps
+ON DUPLICATE KEY UPDATE
+    first_name = VALUES(first_name),
+    last_name = VALUES(last_name),
+    email = VALUES(email),
+    phone_number = VALUES(phone_number),
+    hire_date = VALUES(hire_date),
+    job_id = VALUES(job_id),
+    salary = VALUES(salary),
+    commission_pct = VALUES(commission_pct),
+    manager_id = VALUES(manager_id),
+    department_id = VALUES(department_id);
+
+
+SELECT * FROM copy_emp WHERE employee_id = 101;
+
+SELECT * FROM copy_emp WHERE employee_id = 999;
+
+or SELECT *FROM copy_emp
+
+
+Activity 1:
+
+CREATE TABLE new_emps (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100),
+    phone_number VARCHAR(20),
+    hire_date DATE,
+    job_id VARCHAR(10),
+    salary DECIMAL(10, 2),
+    commission_pct DECIMAL(5, 2),
+    manager_id INT,
+    department_id INT
+);
+
+
+INSERT INTO new_emps VALUES
+(201, 'Ayesha', 'Rahman', 'ayesha.r@example.com', '01234567890', '2022-01-10', 'SA_REP', 6000, 0.1, 101, 60),
+(202, 'Nayeem', 'Hasan', 'nayeem.h@example.com', '01234567891', '2022-02-12', 'HR_REP', 5500, NULL, 102, 40),
+(203, 'Tania', 'Khan', 'tania.k@example.com', '01234567892', '2022-03-14', 'IT_PROG', 7000, NULL, 103, 80),
+(204, 'Farhan', 'Ali', 'farhan.a@example.com', '01234567893', '2022-04-16', 'MK_MAN', 9000, NULL, 104, 20),
+(205, 'Zara', 'Islam', 'zara.i@example.com', '01234567894', '2022-05-18', 'FI_MGR', 8500, NULL, 105, 10);
+
+
+CREATE TABLE merged_emps (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email VARCHAR(100),
+    phone_number VARCHAR(20),
+    hire_date DATE,
+    job_id VARCHAR(10),
+    salary DECIMAL(10, 2),
+    commission_pct DECIMAL(5, 2),
+    manager_id INT,
+    department_id INT
+);
+
+
+INSERT INTO merged_emps
+SELECT * FROM emps;
+
+
+INSERT INTO merged_emps (
+    employee_id, first_name, last_name, email, phone_number,
+    hire_date, job_id, salary, commission_pct, manager_id, department_id
+)
+SELECT
+    employee_id, first_name, last_name, email, phone_number,
+    hire_date, job_id, salary, commission_pct, manager_id, department_id
+FROM new_emps
+ON DUPLICATE KEY UPDATE
+    first_name = VALUES(first_name),
+    last_name = VALUES(last_name),
+    email = VALUES(email),
+    phone_number = VALUES(phone_number),
+    hire_date = VALUES(hire_date),
+    job_id = VALUES(job_id),
+    salary = VALUES(salary),
+    commission_pct = VALUES(commission_pct),
+    manager_id = VALUES(manager_id),
+    department_id = VALUES(department_id);
+
+
+Select * FROM merged_emps
+
+
